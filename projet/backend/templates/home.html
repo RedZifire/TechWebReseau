@@ -1,24 +1,20 @@
 {% extends "layout.html" %}
 
-{% block title %}Accueil{% endblock %}
-
 {% block content %}
 
-<h2 class="title">Feed</h2>
+<h2>Feed</h2>
 
-<div class="feed">
+<form action="/add_post" method="POST">
+    <input name="image" placeholder="image url">
+    <input name="caption" placeholder="caption">
+    <button>Post</button>
+</form>
 
-    {% for post in posts %}
-
-    <div class="post-card">
-        <img src="{{ post.image }}" alt="post image">
-        <div class="post-content">
-            <p>{{ post.caption }}</p>
-        </div>
-    </div>
-
-    {% endfor %}
-
+{% for post in posts %}
+<div class="post">
+    <img src="{{ post.image }}">
+    <p>{{ post.caption }}</p>
 </div>
+{% endfor %}
 
 {% endblock %}

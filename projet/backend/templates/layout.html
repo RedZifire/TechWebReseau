@@ -1,34 +1,21 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}PicProfile{% endblock %}</title>
-
+    <title>{% block title %}Site{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <h1>PicProfile</h1>
+<nav class="navbar">
+    <a href="/home">Home</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
+</nav>
 
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/profile">Profile</a>
-            <a href="/upload">Upload</a>
-        </div>
-    </nav>
-
-    <!-- CONTENT -->
-    <main class="container">
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <p>© 2026 PicProfile</p>
-    </footer>
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
 
 </body>
 </html>
