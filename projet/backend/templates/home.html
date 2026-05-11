@@ -12,8 +12,19 @@
 
 {% for post in posts %}
 <div class="post">
+    <p class="author">@{{ post.author.username }}</p>
     <img src="{{ post.image }}">
     <p>{{ post.caption }}</p>
+    <form action="/add_comment/{{ post.id }}" method="POST">
+        <input name="text" placeholder="comment">
+        <button>Send</button>
+    </form>
+    {% for comment in post.comments %}
+        <p>
+            <b>@{{ comment.author.username }}</b>
+            {{ comment.text }}
+        </p>
+    {% endfor %}
 </div>
 {% endfor %}
 
