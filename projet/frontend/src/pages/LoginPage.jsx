@@ -10,6 +10,7 @@ function LoginPage() {
         <LoginForm />
 
         <div className="text-center mt-3">
+        <p className="mb-2">Pas encore de compte ?</p>
           <Link to="/register" className="btn btn-outline-primary">
             Créer un nouveau compte
           </Link>

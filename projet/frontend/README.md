@@ -15,14 +15,10 @@ Currently, two official plugins are available:
 
 cd backend
 
-Windows :
 python -m venv venv
 
-Linux / Mac :
-python3 -m venv venv
-
 Windows :
-venv\Scripts\activate
+python -m venv venv
 
 Linux / Mac :
 source venv/bin/activate

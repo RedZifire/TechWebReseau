@@ -175,7 +175,8 @@ def get_post(post_id):
         comments.append({
             "id": comment.id,
             "content": comment.content,
-            "username": comment.user.username
+            "username": comment.user.username,
+            "user_id": comment.user_id
         })
 
     return jsonify({
@@ -275,6 +276,18 @@ def delete_post(post_id):
     db.session.commit()
 
     return jsonify({"message": "Post supprimé"})
+
+@app.route("/comments/<int:comment_id>", methods=["DELETE"])
+def delete_comment(comment_id):
+    comment = Comment.query.filter_by(id=comment_id).first()
+
+    if not comment:
+        return jsonify({"error": "Commentaire introuvable"}), 404
+
+    db.session.delete(comment)
+    db.session.commit()
+
+    return jsonify({"message": "Commentaire supprimé"})
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
