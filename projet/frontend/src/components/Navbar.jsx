@@ -20,7 +20,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
+    <nav className="navbar navbar-expand-sm navbar-dark navbar-custom mb-4">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/accueil">SocialApp</Link>
 

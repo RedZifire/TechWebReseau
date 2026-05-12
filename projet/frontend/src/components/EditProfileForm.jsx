@@ -61,7 +61,7 @@ function EditProfileForm() {
         />
       </div>
 
-      <button className="btn btn-warning">Modifier</button>
+      <button className="btn btn-primary">Modifier</button>
     </form>
   )
 }
