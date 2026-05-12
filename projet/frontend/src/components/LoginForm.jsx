@@ -27,7 +27,7 @@ function LoginForm() {
           setError(data.error)
         } else {
           localStorage.setItem('user', JSON.stringify(data.user))
-          navigate('/profile')
+          window.location.href = '/profile'
         }
       })
   }
