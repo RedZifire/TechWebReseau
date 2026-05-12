@@ -277,7 +277,7 @@ def delete_post(post_id):
 
     return jsonify({"message": "Post supprimé"})
 
-@app.route("/comments/<int:comment_id>", methods=["DELETE"])
+@app.route("/comments/<int:comment_id>", methods=["DELETE"]) #supprimer les commentaires 
 def delete_comment(comment_id):
     comment = Comment.query.filter_by(id=comment_id).first()
 
