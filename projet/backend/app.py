@@ -2,10 +2,10 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__)  #creation de l'application flask
 
 app.config["SECRET_KEY"] = "secret_key"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///social.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///social.db" #on créé un file db.sqlite où on sauvegarde tous les donnés
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.debug = True
 
@@ -14,8 +14,10 @@ CORS(app)
 db = SQLAlchemy(app)
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+# ---------------- MODELS ----------------
+
+class User(db.Model): #cette classe represente un tableau dans le database et ça a comme colonnes:
+    id = db.Column(db.Integer, primary_key=True) #identificateur unique du User: c'est un int (integer), le nombre associé a chaque username 
     username = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     profile_picture = db.Column(
@@ -23,21 +25,21 @@ class User(db.Model):
         default="https://via.placeholder.com/150"
     )
 
-    posts = db.relationship("Post", backref="user", lazy=True)
-    comments = db.relationship("Comment", backref="user", lazy=True)
+    posts = db.relationship("Post", backref="user", lazy=True) #pour la relation user-post
+    comments = db.relationship("Comment", backref="user", lazy=True) #relation user-commentaire
 
     def __init__(self, username, password):
         self.username = username
         self.password = password
 
 
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String(255), nullable=False)
-    caption = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+class Post(db.Model): #autre tableau, créé pour les post
+    id = db.Column(db.Integer, primary_key=True) 
+    image = db.Column(db.String(255), nullable=False) #sauvgarde le URL de l'image
+    caption = db.Column(db.String(255), nullable=False) #description de l'image
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False) #sauvgarde l'id du User qui a créé le post
 
-    comments = db.relationship("Comment", backref="post", lazy=True)
+    comments = db.relationship("Comment", backref="post", lazy=True) #comments sous le post (donc rélation comments-post)
 
     def __init__(self, image, caption, user_id):
         self.image = image
@@ -45,11 +47,11 @@ class Post(db.Model):
         self.user_id = user_id
 
 
-class Comment(db.Model):
+class Comment(db.Model): #pour créer des commentaires
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(255), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False)
+    content = db.Column(db.String(255), nullable=False) #quoi on a écrit
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False) #qui a écrit
+    post_id = db.Column(db.Integer, db.ForeignKey("post.id"), nullable=False) #dans quel post
 
     def __init__(self, content, user_id, post_id):
         self.content = content
@@ -60,6 +62,9 @@ class Comment(db.Model):
 with app.app_context():
     db.create_all()
 
+
+# ---------------- ROUTES ----------------
+#les routes sont les URL du site
 
 @app.route("/")
 def index():
