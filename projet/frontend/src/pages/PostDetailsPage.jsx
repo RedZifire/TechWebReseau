@@ -85,7 +85,11 @@ function PostDetailsPage() {
         <h3>Commentaires</h3>
 
         {post.comments.map((comment) => (
-          <CommentCard key={comment.id} comment={comment} />
+          <CommentCard
+            key={comment.id}
+            comment={comment}
+            onCommentDeleted={loadPost}
+          />
         ))}
       </div>
     </div>
