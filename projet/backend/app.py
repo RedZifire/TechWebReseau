@@ -60,7 +60,7 @@ class Comment(db.Model): #pour créer des commentaires
 
 
 with app.app_context():
-    db.create_all()
+    db.create_all() #création de la base de données (qui ne s'éfface pas chaque fois)
 
 
 # ---------------- ROUTES ----------------
@@ -71,12 +71,11 @@ def index():
     return jsonify({"message": "Backend Flask actif"})
 
 
-@app.route("/register", methods=["POST"])
+@app.route("/register", methods=["POST"]) #pour se registrer, accepte requestes POST (envoyer données du login) (request est un objet qui représente la requeste HTTP arrivé du broswer)
 def register():
-    data = request.json
-
-    username = data.get("username")
-    password = data.get("password")
+    data = request.json #data sont les donné de la requeste qui arrivent du broswer (request est un objet qui représente la requeste HTTP arrivé du broswer)
+    username = data.get("username") 
+    password = data.get("password") 
 
     if not username or not password:
         return jsonify({"error": "Tous les champs sont obligatoires"}), 400
@@ -84,10 +83,10 @@ def register():
     if len(password) < 6:
         return jsonify({"error": "Le mot de passe doit contenir au moins 6 caractères"}), 400
 
-    user = User(username, password)
+    user = User(username, password)  #on a créé le nouveau utent
 
     db.session.add(user)
-    db.session.commit()
+    db.session.commit() #on sauvgarde dans le db de la session
 
     return jsonify({
         "message": "Compte créé",
@@ -96,25 +95,25 @@ def register():
             "username": user.username,
             "profile_picture": user.profile_picture
         }
-    })
+    }) 
 
 
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
 
-    username = data.get("username")
+    username = data.get("username") #on cherche cet utent dans le db et on vérifie que la password soit sorrecte
     password = data.get("password")
 
-    if not username or not password:
+    if not username or not password: 
         return jsonify({"error": "Tous les champs sont obligatoires"}), 400
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first() #on cherche cet utent (le premier qui sort) dans le db
 
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 401
 
-    if user.password != password:
+    if user.password != password: 
         return jsonify({"error": "Mot de passe incorrect"}), 401
 
     return jsonify({
@@ -127,7 +126,7 @@ def login():
     })
 
 
-@app.route("/posts", methods=["GET"])
+@app.route("/posts", methods=["GET"]) #chercher dans le db les posts de quelcqu'un 
 def get_posts():
     posts = Post.query.all()
     result = []
@@ -141,10 +140,10 @@ def get_posts():
             "user_id": post.user_id
         })
 
-    return jsonify(result)
+    return jsonify(result) #jsonify sert pour convertir py en language complréhensible pour des autres languages 
 
 
-@app.route("/posts", methods=["POST"])
+@app.route("/posts", methods=["POST"]) #ajouter un post
 def add_post():
     data = request.json
 
@@ -155,15 +154,15 @@ def add_post():
     if not image or not caption or not user_id:
         return jsonify({"error": "Image, description et utilisateur obligatoires"}), 400
 
-    post = Post(image, caption, user_id)
+    post = Post(image, caption, user_id) #création du post
 
     db.session.add(post)
-    db.session.commit()
+    db.session.commit() #sauvgardé dans db
 
     return jsonify({"message": "Post ajouté"})
 
 
-@app.route("/posts/<int:post_id>", methods=["GET"])
+@app.route("/posts/<int:post_id>", methods=["GET"]) #chercher un post de qqn et l'affichier (avec commentaires)
 def get_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
 
@@ -188,7 +187,7 @@ def get_post(post_id):
     })
 
 
-@app.route("/posts/<int:post_id>/comments", methods=["POST"])
+@app.route("/posts/<int:post_id>/comments", methods=["POST"]) #ajouter un commentaire sous un post
 def add_comment(post_id):
     data = request.json
 
@@ -198,24 +197,24 @@ def add_comment(post_id):
     if not content or not user_id:
         return jsonify({"error": "Commentaire obligatoire"}), 400
 
-    comment = Comment(content, user_id, post_id)
+    comment = Comment(content, user_id, post_id) #creation du commentaire
 
     db.session.add(comment)
-    db.session.commit()
+    db.session.commit() #sauvgardé dans le db
 
     return jsonify({"message": "Commentaire ajouté"})
 
 
-@app.route("/profile/<int:user_id>", methods=["GET"])
+@app.route("/profile/<int:user_id>", methods=["GET"]) #chercher qqn
 def get_profile(user_id):
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first() #on cherche cet utent (le premier qui sort) dans le db
 
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 404
 
     posts = []
 
-    for post in user.posts:
+    for post in user.posts: #on cherche ses posts
         posts.append({
             "id": post.id,
             "image": post.image,
@@ -231,9 +230,9 @@ def get_profile(user_id):
     })
 
 
-@app.route("/profile/<int:user_id>", methods=["PUT"])
+@app.route("/profile/<int:user_id>", methods=["PUT"]) #on modifice le profil
 def update_profile(user_id):
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first() 
 
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 404
@@ -248,10 +247,10 @@ def update_profile(user_id):
 
     user.username = username
 
-    if profile_picture:
-        user.profile_picture = profile_picture
+    if profile_picture: 
+        user.profile_picture = profile_picture #mettre à jour la photo
 
-    db.session.commit()
+    db.session.commit() 
 
     return jsonify({
         "message": "Profil modifié",
@@ -262,7 +261,7 @@ def update_profile(user_id):
         }
     })
 
-@app.route("/posts/<int:post_id>", methods=["DELETE"])
+@app.route("/posts/<int:post_id>", methods=["DELETE"]) #eliminer un psot
 def delete_post(post_id):
     post = Post.query.filter_by(id=post_id).first()
 
