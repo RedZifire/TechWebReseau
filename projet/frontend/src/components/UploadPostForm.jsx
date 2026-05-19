@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 function UploadPostForm({ onPostCreated }) {
-  const [image, setImage] = useState('')
+  const [image, setImage] = useState(null)
   const [caption, setCaption] = useState('')
   const [error, setError] = useState('')
 
@@ -15,15 +15,16 @@ function UploadPostForm({ onPostCreated }) {
       return
     }
 
-    fetch('http://127.0.0.1:5001/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        image: image,
-        caption: caption,
-        user_id: user.id
-      })
-    })
+   const formData = new FormData()
+
+   formData.append('image', image)
+   formData.append('caption', caption)
+   formData.append('user_id', user.id)
+
+  fetch('http://127.0.0.1:5001/posts', {
+    method: 'POST',
+    body: formData
+})
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
@@ -45,9 +46,10 @@ function UploadPostForm({ onPostCreated }) {
       <div className="mb-3">
         <label className="form-label">URL de l’image</label>
         <input
+          type="file"
           className="form-control"
-          value={image}
-          onChange={(event) => setImage(event.target.value)}
+          accept="image/*"
+          onChange={(event) => setImage(event.target.files[0])}
         />
       </div>
 
