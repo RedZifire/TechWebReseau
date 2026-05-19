@@ -39,7 +39,11 @@ function ProfilePage() {
       <div className="row">
         {profile && profile.posts.map((post) => (
           <div className="col-12 col-md-6 col-lg-4" key={post.id}>
-            <PostCard post={post} onPostDeleted={loadProfile} />
+            <PostCard
+              post={post}
+              onPostDeleted={loadProfile}
+              showDeleteButton={true}
+            />
           </div>
         ))}
       </div>

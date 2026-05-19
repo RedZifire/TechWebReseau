@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom'
 
-function PostCard({ post, onPostDeleted }) {
-  const user = JSON.parse(localStorage.getItem('user'))
-
+function PostCard({ post, onPostDeleted, showDeleteButton }) {
   function deletePost() {
     fetch(`http://127.0.0.1:5001/posts/${post.id}`, {
       method: 'DELETE'
@@ -27,7 +25,7 @@ function PostCard({ post, onPostDeleted }) {
           Voir le post
         </Link>
 
-        {user && user.id === post.user_id && (
+        {showDeleteButton && (
           <button className="btn btn-danger" onClick={deletePost}>
             Supprimer
           </button>

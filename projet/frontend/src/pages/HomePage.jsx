@@ -28,7 +28,7 @@ function HomePage() {
       <div className="row">
         {posts.map((post) => (
           <div className="col-12 col-md-6 col-lg-4" key={post.id}>
-            <PostCard post={post} onPostDeleted={loadPosts} />
+            <PostCard post={post} />
           </div>
         ))}
       </div>

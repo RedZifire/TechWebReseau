@@ -7,7 +7,7 @@ function ProfileHeader({ user }) {
     <div className="profile-header text-center mb-4">
       <img
         src={user.profile_picture || 'https://via.placeholder.com/150'}
-        alt="profile"
+        alt="---"
         className="rounded-circle mb-3 profile-image"
       />
 
