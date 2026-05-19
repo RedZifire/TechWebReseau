@@ -28,8 +28,8 @@ function Navbar() {
           {user && (
             <>
               <Link className="nav-link" to="/accueil">Accueil</Link>
-              <Link className="nav-link" to="/profile">Profil</Link>
-              <Link className="nav-link" to="/profile/modifier">Modifier profil</Link>
+              <Link className="nav-link" to="/profile">Mon profil</Link>
+              <Link className="nav-link" to="/profile/modifier">Modifier mon profil</Link>
             </>
           )}
         </div>

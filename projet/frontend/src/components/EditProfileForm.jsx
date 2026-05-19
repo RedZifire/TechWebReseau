@@ -48,7 +48,7 @@ function EditProfileForm() {
       {error && <p className="text-danger">{error}</p>}
 
       <div className="mb-3">
-        <label className="form-label">Pseudo</label>
+        <label className="form-label">Modifier votre pseudo</label>
         <input
           className="form-control"
           value={username}
@@ -57,7 +57,7 @@ function EditProfileForm() {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Photo de profil URL</label>
+        <label className="form-label">Choisir une photo de profil </label>
         <input
           type="file"
           className="form-control"
@@ -66,7 +66,7 @@ function EditProfileForm() {
         />
       </div>
 
-      <button className="btn btn-primary">Modifier</button>
+      <button className="btn btn-primary">Sauvegarder</button>
     </form>
   )
 }

@@ -44,7 +44,7 @@ function UploadPostForm({ onPostCreated }) {
       {error && <p className="text-danger">{error}</p>}
 
       <div className="mb-3">
-        <label className="form-label">URL de l’image</label>
+        <label className="form-label">Choisir une image</label>
         <input
           type="file"
           className="form-control"
@@ -54,7 +54,7 @@ function UploadPostForm({ onPostCreated }) {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Description</label>
+        <label className="form-label">Ajouter une description</label>
         <input
           className="form-control"
           value={caption}
