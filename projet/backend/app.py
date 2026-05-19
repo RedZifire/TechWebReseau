@@ -1,6 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import os
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)  #creation de l'application flask
 
@@ -8,6 +11,9 @@ app.config["SECRET_KEY"] = "secret_key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///social.db" #on créé un file db.sqlite où on sauvegarde tous les donnés
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.debug = True
+UPLOAD_FOLDER = "uploads"
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 CORS(app)
 
@@ -144,20 +150,30 @@ def get_posts():
 
 
 @app.route("/posts", methods=["POST"]) #ajouter un post
+@app.route("/posts", methods=["POST"])
 def add_post():
-    data = request.json
 
-    image = data.get("image")
-    caption = data.get("caption")
-    user_id = data.get("user_id")
+    image = request.files.get("image")
+    caption = request.form.get("caption")
+    user_id = request.form.get("user_id")
 
     if not image or not caption or not user_id:
-        return jsonify({"error": "Image, description et utilisateur obligatoires"}), 400
+        return jsonify({
+            "error": "Image, description et utilisateur obligatoires"
+        }), 400
 
-    post = Post(image, caption, user_id) #création du post
+    filename = secure_filename(image.filename)
+
+    image.save(
+        os.path.join(app.config["UPLOAD_FOLDER"], filename)
+    )
+
+    image_url = f"http://127.0.0.1:5001/uploads/{filename}"
+
+    post = Post(image_url, caption, user_id)
 
     db.session.add(post)
-    db.session.commit() #sauvgardé dans db
+    db.session.commit()
 
     return jsonify({"message": "Post ajouté"})
 
@@ -233,25 +249,33 @@ def get_profile(user_id):
 
 @app.route("/profile/<int:user_id>", methods=["PUT"]) #on modifice le profil
 def update_profile(user_id):
-    user = User.query.filter_by(id=user_id).first() 
+
+    user = User.query.filter_by(id=user_id).first()
 
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 404
 
-    data = request.json
-
-    username = data.get("username")
-    profile_picture = data.get("profile_picture")
+    username = request.form.get("username")
+    profile_picture = request.files.get("profile_picture")
 
     if not username:
         return jsonify({"error": "Pseudo obligatoire"}), 400
 
     user.username = username
 
-    if profile_picture: 
-        user.profile_picture = profile_picture #mettre à jour la photo
+    if profile_picture:
 
-    db.session.commit() 
+        filename = secure_filename(profile_picture.filename)
+
+        profile_picture.save(
+            os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        )
+
+        image_url = f"http://127.0.0.1:5001/uploads/{filename}"
+
+        user.profile_picture = image_url
+
+    db.session.commit()
 
     return jsonify({
         "message": "Profil modifié",
@@ -288,6 +312,10 @@ def delete_comment(comment_id):
     db.session.commit()
 
     return jsonify({"message": "Commentaire supprimé"})
+
+@app.route("/uploads/<filename>")
+def uploaded_file(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

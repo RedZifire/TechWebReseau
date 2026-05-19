@@ -5,7 +5,7 @@ function EditProfileForm() {
   const user = JSON.parse(localStorage.getItem('user'))
 
   const [username, setUsername] = useState(user ? user.username : '')
-  const [profilePicture, setProfilePicture] = useState('')
+  const [profilePicture, setProfilePicture] = useState(null)
   const [error, setError] = useState('')
 
   const navigate = useNavigate()
@@ -18,13 +18,17 @@ function EditProfileForm() {
       return
     }
 
+    const formData = new FormData()
+
+    formData.append('username', username)
+
+    if (profilePicture) {
+      formData.append('profile_picture', profilePicture)
+    }
+
     fetch(`http://127.0.0.1:5001/profile/${user.id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: username,
-        profile_picture: profilePicture
-      })
+      body: formData
     })
       .then((response) => response.json())
       .then((data) => {
@@ -55,9 +59,10 @@ function EditProfileForm() {
       <div className="mb-3">
         <label className="form-label">Photo de profil URL</label>
         <input
+          type="file"
           className="form-control"
-          value={profilePicture}
-          onChange={(event) => setProfilePicture(event.target.value)}
+          accept="image/*"
+          onChange={(event) => setProfilePicture(event.target.files[0])}
         />
       </div>
 

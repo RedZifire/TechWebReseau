@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 function UploadPostForm({ onPostCreated }) {
-  const [caption, setCaption] = useState('')
   const [image, setImage] = useState(null)
+  const [caption, setCaption] = useState('')
   const [error, setError] = useState('')
 
   function handleSubmit(event) {
@@ -15,21 +15,27 @@ function UploadPostForm({ onPostCreated }) {
       return
     }
 
-  const formData = new FormData()
+   const formData = new FormData()
 
-  formData.append('username', user.username)
-  formData.append('caption', caption)
-  formData.append('image', image)
+   formData.append('image', image)
+   formData.append('caption', caption)
+   formData.append('user_id', user.id)
 
   fetch('http://127.0.0.1:5001/posts', {
     method: 'POST',
     body: formData
-  })
-    .then((response) => response.json())
-    .then(() => {
-      window.location.reload()
-    })
-    }
+})
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          setError(data.error)
+        } else {
+          setImage('')
+          setCaption('')
+          onPostCreated()
+        }
+      })
+  }
 
   return (
     <form onSubmit={handleSubmit} className="card p-3 mb-4">
@@ -39,11 +45,12 @@ function UploadPostForm({ onPostCreated }) {
 
       <div className="mb-3">
         <label className="form-label">URL de l’image</label>
-          <input
-            type="file"
-            className="form-control"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
+        <input
+          type="file"
+          className="form-control"
+          accept="image/*"
+          onChange={(event) => setImage(event.target.files[0])}
+        />
       </div>
 
       <div className="mb-3">
