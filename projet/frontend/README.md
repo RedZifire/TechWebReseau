@@ -40,7 +40,7 @@ Ouvrir un deuxième terminal dans `frontend` :
 
 ```bash
 cd frontend
-npm install
+  npm install
 npm run dev
 ```
 
