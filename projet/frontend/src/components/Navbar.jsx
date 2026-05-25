@@ -42,7 +42,7 @@ function Navbar() { //on définit la composante navbar avec une variable que rea
           <Link className="btn btn-outline-light" to="/">
             Connexion
           </Link>
-        )} {/* bouton pour se déconnecter (si le user existe) sinon (:) montre connection et en cliquant dessus on arrive sur la home */}
+        )} {/* bouton pour se déconnecter (si le user existe) sinon (:) montre connection et en cliquant dessus on arrive sur la / (le login) */}
       </div>
     </nav>
   )

@@ -44,7 +44,7 @@ function Navbar() { //on definit navbar
             </button>
           ) : (
             <Link className="btn btn-outline-light" to="/">Connexion</Link>
-          )} {/* si le user existe montrer le bouton pour la déconnection sinon on montre "connection" et en cliquant on arriver sur la home */}
+          )} {/* si le user existe montrer le bouton pour la déconnection sinon on montre "connection" et en cliquant on arriver sur / (le login) */}
         </div>
       </div>
     </nav>
